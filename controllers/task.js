@@ -5,6 +5,8 @@ import ErrorHandler from "../middleWare/error.js";
 export const createStation = async (req, res, next) => {
     try {
         const {name,location,status,powerOutput,connectorType} = req.body;
+        console.log(name, location, status, powerOutput, connectorType, "-----------------");
+        
         const station = await ChargingStation.create({
             name,
             location: {

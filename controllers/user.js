@@ -7,6 +7,8 @@ import ErrorHandler from "../middleWare/error.js";
 export const register=async(req,res,next)=>{
     try{
   const {name,email,password}=req.body;
+  console.log(name,email,password ,"-----------------");
+  
   let user= await User.findOne({email});
   if(user)return next(new ErrorHandler("User alredy existed",400))
   const hasedPassword=await bcrypt.hash(password,10);
@@ -21,6 +23,8 @@ export const register=async(req,res,next)=>{
 export const login=async(req,res,next)=>{
     try{
       const {email,password} =req.body;
+      console.log(email,password),"-----------------";
+      
       const user=await User.findOne({email}).select("+password"); // select ("+password") because we define in schema password select false so it not select password so manualy select password
       if(!user)return next(new ErrorHandler("Invalid Email",400))
      const isMatch=await bcrypt.compare(password,user.password);
@@ -30,3 +34,30 @@ export const login=async(req,res,next)=>{
       next(error)
     }
 }
+
+//get your profile--------------------------
+export const getMyProfile=(req,res)=>{
+
+    res.status(200).json({
+        success:true,
+        user:req.user,
+    })
+};
+
+
+// logout----------------------------------
+export const logout=(req,res)=>{
+
+    res.status(200).cookie(
+       "token","",{
+        expire:new Date(Date.now()),
+        // sameSite:process.env.NODE_ENV==="development"?"lax":"none",
+        sameSite:"lax",
+        secure:false
+        // secure:process.env.NODE_ENV==="development"?false:true
+       }).json({
+        success:true,
+        message:"logout Successfully",
+        
+    })
+};
