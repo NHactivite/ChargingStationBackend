@@ -1,0 +1,27 @@
+import mongoose from "mongoose";
+
+const chargingStationSchema = new mongoose.Schema({
+  name: { 
+    type: String,
+    required: true 
+    },
+  location: {
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+  },
+  status: { 
+    type: String, 
+    enum: ["active", "inactive"], 
+    default: "active"
+ },
+  powerOutput: { 
+    type: Number, 
+    required: true
+ },
+  connectorType: { 
+    type: String, 
+    required: true
+ },
+});
+
+export const ChargingStation = mongoose.model("ChargingStation", chargingStationSchema);
